@@ -1,2 +1,2 @@
-# neurocrytp
+# neurocrypt
 Neural Key Generation
