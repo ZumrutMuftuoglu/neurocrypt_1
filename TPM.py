@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb 18 14:48:43 2019
-
-@author: User
-"""
-
 #Burada TPM'i oluşturuyoruz
 class Machine:
     '''Burada TPM'i oluşturuyoruz. TPM binary çıkış üretir(tau).
