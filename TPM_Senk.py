@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb 18 14:50:58 2019
-
-@author: User
-"""
-
 #2 TPM oluşturduk
 import time
 import sys
