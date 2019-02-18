@@ -8,6 +8,6 @@ def hebbian(W, X, sigma, tau1, tau2, d):
     for (i, j), _ in np.ndenumerate(W):
         W[i, j] += X[i, j] * tau1 * theta(sigma[i], tau1) * theta(tau1, tau2)
         W[i, j] = np.clip(W[i, j] , -d, d)
-        print('Wgüncel=',W) #bunu sonradan yazdım
-        print('tau1=',tau1) #bunu sonradan yazdım
-        print('tau2=',tau2) #bunu sonradan yazdım
+        print('Wgüncel=',W)
+        print('tau1=',tau1) 
+        print('tau2=',tau2)
