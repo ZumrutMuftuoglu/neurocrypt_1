@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb 18 14:45:58 2019
-
-@author: User
-"""
-
 import numpy as np
 
 def theta(t1, t2):
