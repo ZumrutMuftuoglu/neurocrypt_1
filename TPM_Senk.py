@@ -48,7 +48,7 @@ while(not sync):
     sync_history.append(score) # Senkronizasyon yüzdesini kaydeder.
     sys.stdout.write('\r' + "Synchronization = " + str(int(score)) + "%   /  Updates = " + str(nb_updates) ) 
     
-    if score == 100: # Senkronizasyon yüzdesi %100 olduğunu sync'yi True değerine çeker.
+    if score == 100: # Senkronizasyon yüzdesi %100 olduğunda sync'yi True değerine çeker.
         sync = True
 
 end_time = time.time()
