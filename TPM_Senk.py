@@ -1,82 +1,68 @@
-#2 TPM oluşturduk
+#2 TPM oluşturur
 import time
 import sys
 
-#Machine parameters
+#TPM parametreleri
 k = 3
 n = 4
 d = 6
 
-#Update rule
+#Öğrenme kuralını tanımlıyoruz.
 rule = ['hebbian']
 rule = rule[0]
 
-#Create 2 machines : Alice and Bob.
-print("Creating machines : k=" + str(k) + ", n=" + str(n) + ", d=" + str(n))
-print("Using " + rule + " update rule.")
-Alice = Machine(k, n, d)
-Bob = Machine(k, n, d)
-#Eve = Machine(k, n, d)
+#2 TPMs oluşturuyoruz : Alice and Bob.
+print("TPM oluşturuluyor... k=" + str(k) + ", n=" + str(n) + ", d=" + str(n))
+print("Öğrenme kuralı olarak " + rule + " kullanılıyor.")
+Alice = TPM(k, n, d)
+Bob = TPM(k, n, d)
+#Eve = TPM(k, n, d)
 
-#Random number generator
+#Rasgele sayı üreteci
 def random():
     return np.random.randint(-d, d + 1, [k, n])
     
-#Function to evaluate the synchronization score between two machines.
+#İki TPM'in senkronizasyon skorunu burası veriyor.
 def sync_score(m1, m2):
     return 1.0 - np.average(1.0 * np.abs(m1.W - m2.W)/(2 * d))
 
-#Synchronize weights
-
-sync = False # Flag to check if weights are sync
-nb_updates = 0 # Update counter
-nb_eve_updates = 0 # To count the number of times eve updated
-start_time = time.time() # Start time
-sync_history = [] # to store the sync score after every update
+#Senkronizasyon ağırlıkları
+sync = False # ağırlıkların senkron olup olmadığını kontrol eder
+nb_updates = 0 # sayacı günceller
+#nb_eve_updates = 0 # To count the number of times eve updated
+start_time = time.time() # zamanlayıcıyı başlatır
+sync_history = [] # her güncelleme sonrası senkronizasyon skorunu saklar
 
 while(not sync):
+    X = random() # rasgele boyutlu vektör oluşturur [k, n]
+    tauA = Alice(X) # TPM1(Alice)' in çıkış değerini alır.
+    tauB = Bob(X) # TPM2(Bob)' nin çıkış değerini alır.
+    Alice.update(tauB, rule) # TPM1(Alice)'i TPM2(Bob)'un çıkış değeriyle günceller  
+    Bob.update(tauA, rule) # TPM2(Bob)'yi TPM1(Alice)'in çıkış değeriyle günceller
 
-    X = random() # Create random vector of dimensions [k, n]
-
-    tauA = Alice(X) # Get output from Alice
-    tauB = Bob(X) # Get output from Bob
-#    tauE = Eve(X) # Get output from Eve
-
-    Alice.update(tauB, rule) # Update Alice with Bob's output
-    Bob.update(tauA, rule) # Update Bob with Alice's output
-
-    #Eve would update only if tauA = tauB = tauE
+    
     if tauA == tauB :
-#        Eve.update(tauA, rule)
-        nb_eve_updates += 1
+        nb_updates += 1
 
-    nb_updates += 1
-
-    score = 100 * sync_score(Alice, Bob) # Calculate the synchronization of the 2 machines
-
-    sync_history.append(score) # Add sync score to history, so that we can plot a graph later.
-
+    score = 100 * sync_score(Alice, Bob) # İki TPM'in senkronizasyon skorunu yüzedelik olarak hesaplar.
+    sync_history.append(score) # Senkronizasyon yüzdesini kaydeder.
     sys.stdout.write('\r' + "Synchronization = " + str(int(score)) + "%   /  Updates = " + str(nb_updates) ) 
-    if score == 100: # If synchronization score is 100%, set sync flag = True
+    
+    if score == 100: # Senkronizasyon yüzdesi %100 olduğunu sync'yi True değerine çeker.
         sync = True
 
 end_time = time.time()
-time_taken = end_time - start_time # Calculate time taken
+time_taken = end_time - start_time # Senkronizasyon için geçen süreyi hesaplar.
 
 #Print results
-print ('\nMachines have been synchronized.')
-print ('Time taken = ' + str(time_taken)+ " seconds.")
-print ('Updates = ' + str(nb_updates) + ".")
+print ('\nTPMler senkronize oldu')
+print ('Geçen süre = ' + str(time_taken)+ " saniye.")
+print ('Güncellemeler = ' + str(nb_updates) + ".")
 print(X)
-#print(tauA)#sonradan yazdım
-#print (tauB)#sonradan yazdım
-#print( nb_updates)#sonradan yazdım
+print('tauA='+str(tauA))#TPM1(Alice)' in çıkış değerini yazdırır.
+print ('tauB='+str(tauB))#TPM2(Bob)' nin çıkış değerini yazdırır.
 
-print(np.average)
-
-
-#Plot graph 
+#Senkronizasyon geçmişini çizdirir. 
 import matplotlib.pyplot as mpl
 mpl.plot(sync_history)
 mpl.show()
-
